@@ -62,5 +62,51 @@
         ```
       
       > Files in the directories `/etc/cloud/cloud.cfg.d/` and `/etc/netplan/` are read in lexicographical order&mdash;you can pick what names to give to these files.
-      
 
+* Set up port forwarding on your router
+
+* Install and set up Nginx
+
+  * ```sh
+    sudo apt update \
+    sudo apt upgrade \
+    sudo apt install nginx \
+    sudo systemctl enable nginx \
+    sudo systemctl start nginx \
+    nginx -v \
+    curl http://127.0.0.1
+    ```
+
+  * ```sh
+    cd /etc/nginx/sites-available/ \
+    sudo cp default gaubert.dev \
+    sudo vim gaubert.dev
+    ```
+
+  * Change line `server_name _;` to `server_name gaubert.dev www.gaubert.dev;`
+
+  * ```sh
+    sudo unlink /etc/nginx/sites-enabled/default \
+    sudo ln -s /etc/nginx/sites-available/gaubert.dev /etc/nginx/sites-enabled/gaubert.dev \
+    sudo nginx -t
+    ```
+
+  * ```sh
+    sudo systemctl restart nginx
+    ```
+  
+* Install and set up Certbot
+
+  * ```sh
+    sudo apt update \ 
+    sudo apt install snapd \
+    ```
+
+  * Restart your machine
+
+  * ```sh
+    sudo snap install hello-world \
+    hello-world \ 
+    sudo snap install --classic certbot \
+    sudo certbot --nginx
+    ```
