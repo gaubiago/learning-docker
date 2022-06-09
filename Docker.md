@@ -81,6 +81,7 @@
 * `less` command is supposed to replace `more`; `less` allows for scrolling down and up
 
 * Redirection operators: `>` for stdout and `<` stdin
+  * `>>` append to stdout
 
 * Searching for a word in all files of a directory in a case-insensitive and recursive manner:
   ```sh
@@ -108,3 +109,70 @@
   * `||`: execute one command or the other
   * `|`: what comes out of command to the left of the pipe character goes into the second command to the right of the pipe
   * `:\`: break up a long command into multiple lines
+
+* Seeing all the environment variables in your machine:
+  ```sh
+  printenv
+  ```
+
+* `PATH`: variable that Linux or Windows searches for to find a program or a command
+
+* Viewing the value of a certain environment variable
+  ```sh
+  printenv PATH
+  ```
+  or
+  ```sh
+  echo $PATH
+  ```
+
+* Adding new variable to the set of environment variables
+  * To exist as long as the terminal session:
+    ```sh
+    export <VARIABLE>=<value>
+    ```
+  * To exist permanently:
+    ```sh
+    echo <VARIABLE>=<value> >> .bashrc
+    ```
+      * The new environment variable would be available only either on a new terminal session or after running:
+        ```sh
+        source ~/.bashrc
+        ```
+
+* Adding new varia
+
+* Starting a container:
+  ```sh
+  docker start -i <first_chars_of_container_id>
+  ```
+
+* `TTY`: teletype   
+
+* `pts/0`: pseudo-terminal of terminal window 0
+
+* `&`: run command in the background (e.g. `sleep 100 &`)
+
+* Killing a process
+  ```sh
+  kill <pid>
+  ```
+* Adding a user:
+  ```sh
+  useradd -m <username>
+  ```
+    * A similar command&mdash;more interactive and uses `useradd` under the hood:
+      ```sh
+      adduser <username>
+      ```
+  * New created users are added to `/etc/passwd`&mdash;no password is stored here
+    * Passwords are stored in encrypted format in `/etc/shadow/`
+
+* Setting the shell for a user
+  ```sh
+  usermod -s <path_to_shell_bin_file> <username>
+
+* Executing a bash session on a running container and logging in with a specific username:
+  ```sh
+  docker exec -it -u <username> <container_id> bash
+  ```
