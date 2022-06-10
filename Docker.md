@@ -176,3 +176,79 @@
   ```sh
   docker exec -it -u <username> <container_id> bash
   ```
+* Adding a new group:
+  ```sh
+  groupadd <group_name>
+  ```
+    * Groups are stored in `/etc/group`
+
+* Every Linux user has one primary group and zero or more supplementary groups
+  * The primary group is the group that is going to be associated with a new file created by the user if the user is a member of multiple groups
+  * __Primary group__: automatically created when you create a new user&mdash;the group gets the same name as the user
+
+* Adding a user to a supplementary group:
+  ```sh
+  usermod -G <group_name> <username>
+  ```
+
+* Searching for the user in `/etc/passwd`
+  ```sh
+  cat /etc/passwd | grep <username>
+  ```
+    * Output:
+      ```sh
+      <username>:x:<user_id>:<group_id>::<list_of_directories>
+      ```
+
+* Seeing what groups a user is part of:
+  ```sh
+  groups <username>
+  ```
+
+* File permissions:
+  * `d` for directory and `-` for files
+  * By default, all folders have `x` (execute) permission
+  * Left to right:
+    * 1st trio: __u__ ser
+    * 2nd trio: __g__ roup
+    * 3rd trio: __o__ thers
+  * Adding permissions to file (e.g.):
+    ```sh
+    chmod uo+xw-r <filename_1> <filename_2>
+    ``` 
+  
+## Building Images
+
+* Image
+  * A cut-down OS
+  * Third-party libraries
+  * Application files
+  * Environment variables
+
+* Container
+  * Provides an isolated environment
+  * Can be stopped and restarted
+  * Is just a process
+
+* Steps for running a web application
+  * Install NodeJS
+  * `npm install`: install third-party dependencies
+  * `npm start`: start the web application
+
+* Dockerfile instructions
+  * `FROM`: for specifying the base image
+  * `WORKDIR`: for specifying the working directory
+  * `COPY` and `ADD`: for copying files and directories
+  * `RUN`: for executing operating system commands
+  * `ENV`: for setting environment variables
+  * `EXPOSE`: for telling docker a container is starting on a giving port
+  * `USER`: for specifying the user that should run the application&mdash; typically a user with limited privileges
+  * `CMD` and `ENTRYPOINT`: for specifying the command that should be executed when starting a container
+
+* Avoid `:latest` when using `FROM`
+
+* Running a command when starting a container:
+  ```sh
+  docker run -it <container_name> <command>
+  ```
+  * Alpine does not come with `bash`, only with `sh`
