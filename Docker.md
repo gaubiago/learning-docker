@@ -239,6 +239,12 @@
   * `FROM`: for specifying the base image
   * `WORKDIR`: for specifying the working directory
   * `COPY` and `ADD`: for copying files and directories
+    * Copying files with whitespace:
+      ```sh
+      # COPY [src, dst]
+      COPY ["hello world.txt", "."] 
+      ```
+    * `ADD` can copy file from URL, and uncompressed zip files upon copying
   * `RUN`: for executing operating system commands
   * `ENV`: for setting environment variables
   * `EXPOSE`: for telling docker a container is starting on a giving port
@@ -252,3 +258,72 @@
   docker run -it <container_name> <command>
   ```
   * Alpine does not come with `bash`, only with `sh`
+
+* `.dockerignore`: used for listing files and that should be excluded
+
+* By default, Docker runs our application with the root user, which has the highest privileges. This can open security holes in our systems. To run an application we should create a regular user with limited privileges.
+  * ```sh
+    # Create a group
+    addgroup <group_name>
+    # primary_group = group_name 
+    adduser -S -G <primary_group> <system_user>
+    # Verify the user is in the right group
+    groups app
+    ```
+
+* When you have multiple `CMD` instructions in your Dockerfile, only the last one will take effect 
+
+* `ENTRYPOINT` is  harder than `CMD` to override, so use `ENTRYPOINT` when you for sure want a program or command to be executed upon starting a container
+
+* Speeding up builds: if Docker notices that an image layer has been modified at a certain point of the build, Docker has to re-run every command as of that point because of its inability to reuse the respective layers from its cache. Solution (e.g.):
+  ```sh
+  COPY package*.json
+  RUN npm install
+  COPY npm install
+  ```
+  * Take-away: your Docker file should have instructions or files that don't change frequently on the top, and instructions or files that change frequently should be on the bottom
+
+* Deleting dangling images:
+  ```sh
+  docker ps -a
+  docker container prune
+  docker image prune
+  ```
+
+* Deleting an image:
+  ```sh
+  # It also works if the Docker image ID is provided
+  docker image rm <docker_image_name>
+  ```
+
+* Tagging images:
+  * If you don't tag you image properly, `latest` can point to an older image
+  * `latest` is fine for development, but should not be used in production
+  * While building:
+    ```sh
+    docker build -t <image_name>:<tag> <directory_to_be_copied>
+    ```
+  * After building:
+    ```sh
+    docker image tag <image_name>:<current_tag> <image_name>:<new_tag>
+    ```
+
+* Logging in to Docker
+  ```sh
+  Docker login
+  ```
+
+* Pushing your image to Docker registry:
+  ```sh
+  docker push <your_dokcer_username>/<app_name>:<tag>
+  ```
+
+* Saving an image into a compressed file:
+  ```sh
+  docker image save -o <file_name>.tar <image_name>:<tag>
+  ```
+
+* Loading an image from a compressed file:
+  ```sh
+  docker image load -i <file_name>.tar
+  ```
