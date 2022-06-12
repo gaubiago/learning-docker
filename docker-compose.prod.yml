@@ -1,0 +1,44 @@
+# Should use latest version of compose (version must be specified with double quotes--string)
+version: "3.8"
+
+# Names under "services" are arbitrary (they could be front, backend, and database)
+services:
+  web:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    image: vidly_web:1
+    ports:
+      # Array or list syntax
+      - 80:80
+    volumes:
+      - ./frontend:/app
+    restart: unless-stopped
+  api:
+    build: ./backend
+    image: vidly_api:1
+    ports:
+      - 3001:3001
+    environment:
+      # connection string: <driver>://<hostname>/<database>
+      # List sytanx: - DB_URL=mongodb://db/vidly/
+      # Object, or property-value syntax:
+      DB_URL: mongodb://db/vidly
+    command: ./docker-entrypoint.sh
+    restart: unless-stopped
+  db:
+    # Instead of building an image, were are going to pull and image fomr Docker Hub
+    # Mongo built on top of Ubuntu 16
+    image: mongo:4.0-xenial
+    ports:
+      - 27018:27017
+    volumes:
+      # /data/db is the default place MongoDB stores data
+      - vidly:/data/db
+    restart: unless-stopped
+
+# Declaring the volume being used for db
+volumes:
+  vidly:
+
+

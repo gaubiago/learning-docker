@@ -1,0 +1,46 @@
+# Should use latest version of compose (version must be specified with double quotes--string)
+version: "3.8"
+
+# Names under "services" are arbitrary (they could be front, backend, and database)
+services:
+  web:
+    build: ./frontend
+    ports:
+      # Array or list syntax
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+  web_test:
+    image: vidly_web
+    volumes:
+      - ./frontend:/app
+    command: npm test
+  api:
+    build: ./backend
+    ports:
+      - 3001:3001
+    environment:
+      # connection string: <driver>://<hostname>/<database>
+      # List sytanx: - DB_URL=mongodb://db/vidly/
+      # Object, or property-value syntax:
+      DB_URL: mongodb://db/vidly
+    volumes:
+      # No need for specifying an absolute directory in the host with 
+      # docker-compose (as opposed to using the "docker" command)
+      - ./backend:/app
+    command: ./docker-entrypoint.sh
+  db:
+    # Instead of building an image, were are going to pull and image fomr Docker Hub
+    # Mongo built on top of Ubuntu 16
+    image: mongo:4.0-xenial
+    ports:
+      - 27018:27017
+    volumes:
+      # /data/db is the default place MongoDB stores data
+      - vidly:/data/db
+
+# Declaring the volume being used for db
+volumes:
+  vidly:
+
+
