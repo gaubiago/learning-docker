@@ -1,4 +1,7 @@
-# Docker
+# My Notes on The Ultimate Docker Course
+
+My certificate of completion is available [here](https://github.com/gaubiago/learning-docker/blob/main/certificate-of-completion-for-the-ultimate-docker-course.pdf).
+
 ## Introduction to Docker
 
 * Dockerfile provides instructions for Docker to package an application into an image
